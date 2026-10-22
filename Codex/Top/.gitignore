@@ -1,0 +1,12 @@
+# Local service credentials
+.env
+.env.*.local
+.codex/config.toml
+
+# Runtime/cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Logs
+*.log

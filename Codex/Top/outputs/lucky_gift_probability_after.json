@@ -1,0 +1,204 @@
+{
+  "changed_at": "2026-08-24T14:55:20.618739+08:00",
+  "environment": "test",
+  "database": "app",
+  "target_win_rate": "0.30",
+  "winning_rule_weight": 30,
+  "inserted_miss_rule_ids": [
+    23,
+    24,
+    25,
+    26
+  ],
+  "redis_db": 0,
+  "redis_deleted_keys": [],
+  "redis_deleted_key_count": 0,
+  "schema": [
+    {
+      "Field": "id",
+      "Type": "bigint unsigned",
+      "Null": "NO",
+      "Key": "PRI",
+      "Default": null,
+      "Extra": "auto_increment"
+    },
+    {
+      "Field": "config_code",
+      "Type": "varchar(64)",
+      "Null": "NO",
+      "Key": "",
+      "Default": null,
+      "Extra": ""
+    },
+    {
+      "Field": "play_type",
+      "Type": "varchar(32)",
+      "Null": "NO",
+      "Key": "",
+      "Default": null,
+      "Extra": ""
+    },
+    {
+      "Field": "reward_pool",
+      "Type": "varchar(64)",
+      "Null": "NO",
+      "Key": "",
+      "Default": null,
+      "Extra": ""
+    },
+    {
+      "Field": "status",
+      "Type": "varchar(32)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "DRAFT",
+      "Extra": ""
+    },
+    {
+      "Field": "multiplier",
+      "Type": "decimal(18,6)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "0.000000",
+      "Extra": ""
+    },
+    {
+      "Field": "weight",
+      "Type": "bigint unsigned",
+      "Null": "NO",
+      "Key": "",
+      "Default": null,
+      "Extra": ""
+    },
+    {
+      "Field": "enabled",
+      "Type": "tinyint",
+      "Null": "NO",
+      "Key": "",
+      "Default": "1",
+      "Extra": ""
+    },
+    {
+      "Field": "room_public_chat",
+      "Type": "tinyint",
+      "Null": "NO",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "broadcast_float_Msg",
+      "Type": "tinyint",
+      "Null": "NO",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "room_high_multiplier_animation",
+      "Type": "tinyint",
+      "Null": "NO",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "marquee_enabled",
+      "Type": "tinyint",
+      "Null": "NO",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "gift_vibration_enabled",
+      "Type": "tinyint",
+      "Null": "NO",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "float_screen_url",
+      "Type": "varchar(1024)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "multiplier_animation_url",
+      "Type": "varchar(1024)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "public_chat_coin_multiplier_url",
+      "Type": "varchar(1024)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "public_chat_diamond_multiplier_url",
+      "Type": "varchar(1024)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "",
+      "Extra": ""
+    },
+    {
+      "Field": "created_at",
+      "Type": "datetime",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": "DEFAULT_GENERATED"
+    },
+    {
+      "Field": "updated_at",
+      "Type": "datetime",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": "DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+    }
+  ],
+  "verification": [
+    {
+      "play_type": "BILATERAL",
+      "reward_pool": "BILATERAL_RECIPIENT_A",
+      "winning_weight": "120",
+      "miss_weight": "280",
+      "total_weight": "400",
+      "active_rule_count": "5"
+    },
+    {
+      "play_type": "BILATERAL",
+      "reward_pool": "BILATERAL_RECIPIENT_B",
+      "winning_weight": "120",
+      "miss_weight": "280",
+      "total_weight": "400",
+      "active_rule_count": "5"
+    },
+    {
+      "play_type": "BILATERAL",
+      "reward_pool": "BILATERAL_SENDER_COIN",
+      "winning_weight": "180",
+      "miss_weight": "420",
+      "total_weight": "600",
+      "active_rule_count": "7"
+    },
+    {
+      "play_type": "NON_BILATERAL",
+      "reward_pool": "SINGLE_SENDER_COIN",
+      "winning_weight": "240",
+      "miss_weight": "560",
+      "total_weight": "800",
+      "active_rule_count": "9"
+    }
+  ]
+}

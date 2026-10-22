@@ -1,0 +1,14 @@
+[
+  {
+    "id": 2,
+    "play_type": "BILATERAL",
+    "enabled": 1,
+    "updated_at": "2026-08-24 10:55:33"
+  },
+  {
+    "id": 1,
+    "play_type": "NON_BILATERAL",
+    "enabled": 1,
+    "updated_at": "2026-08-24 10:55:33"
+  }
+]

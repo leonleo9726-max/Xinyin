@@ -1,0 +1,4 @@
+interface:
+  display_name: "Setup Pre-Commit"
+  short_description: "Install Husky, lint-staged, Prettier, and checks"
+  default_prompt: "Use $setup-pre-commit to add Husky pre-commit hooks with formatting, typecheck, and tests."

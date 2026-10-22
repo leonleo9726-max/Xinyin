@@ -1,0 +1,4 @@
+interface:
+  display_name: "Calculate Salary"
+  short_description: "Compute Payroll streamer and agency payouts"
+  default_prompt: "Use $calculate-salary to compute a streamer or agency-owner payout from Payroll rules and MySQL data."

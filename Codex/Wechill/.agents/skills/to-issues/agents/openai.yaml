@@ -1,0 +1,4 @@
+interface:
+  display_name: "To Issues"
+  short_description: "Break plans into vertical-slice implementation issues"
+  default_prompt: "Use $to-issues to break this plan into independently grabbable vertical-slice issues."

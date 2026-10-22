@@ -1,0 +1,37 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "mcp__mysql__mysql_query",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Reminder: run SHOW COLUMNS before querying unfamiliar tables'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "mcp__mysql__mysql_query",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Tip: If this table is new, run SHOW COLUMNS first to verify schema'"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -Command \"try { Get-Content -Raw -LiteralPath 'E:\\\\Codex\\\\.mcp.json' | ConvertFrom-Json | Out-Null; Write-Output 'MCP config valid' } catch { Write-Output 'MCP config INVALID'; exit 1 }\""
+          }
+        ]
+      }
+    ]
+  }
+}

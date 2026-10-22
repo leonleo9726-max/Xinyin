@@ -1,0 +1,426 @@
+{
+  "environment": "test",
+  "read_only": false,
+  "query_scope": "guild",
+  "month": "2026-09",
+  "guild": {
+    "id": 35,
+    "guild_no": 1028,
+    "guild_name": "Ganten",
+    "owner_user_id": 900115,
+    "guild_status": 1
+  },
+  "active_member_count": 6,
+  "monthly_row_count": 6,
+  "weekly_row_count": 6,
+  "monthly_members": [
+    {
+      "user_no": "2608302",
+      "role": "主播",
+      "policy_type": 1,
+      "monthly_salary": "28.74",
+      "weekly_salary": "0",
+      "weekly_settled_salary": "0",
+      "sources": [
+        "monthly:realtime"
+      ],
+      "withdrawable_balance": "28.74",
+      "total_salary": "28.74",
+      "status": "has_salary_detail"
+    },
+    {
+      "user_no": "5485290",
+      "role": "主播",
+      "policy_type": 2,
+      "monthly_salary": "29.32",
+      "weekly_salary": "0",
+      "weekly_settled_salary": "0",
+      "sources": [
+        "monthly:realtime"
+      ],
+      "withdrawable_balance": "29.32",
+      "total_salary": "29.32",
+      "status": "has_salary_detail"
+    },
+    {
+      "user_no": "8808791",
+      "role": "公会长",
+      "policy_type": 1,
+      "monthly_salary": "30.65",
+      "weekly_salary": "0",
+      "weekly_settled_salary": "0",
+      "sources": [
+        "monthly:realtime"
+      ],
+      "withdrawable_balance": "160.24",
+      "total_salary": "30.65",
+      "status": "has_salary_detail"
+    }
+  ],
+  "weekly_members": [
+    {
+      "user_no": "5586174",
+      "role": "主播",
+      "policy_type": 3,
+      "monthly_salary": "0",
+      "weekly_salary": "0",
+      "weekly_settled_salary": "22.45",
+      "sources": [
+        "weekly:2026-09-21:settled_snapshot"
+      ],
+      "withdrawable_balance": "91.31",
+      "total_salary": "0",
+      "status": "has_salary_detail"
+    },
+    {
+      "user_no": "3248992",
+      "role": "主播",
+      "policy_type": 3,
+      "monthly_salary": "0",
+      "weekly_salary": "0",
+      "weekly_settled_salary": "22.45",
+      "sources": [
+        "weekly:2026-09-21:settled_snapshot"
+      ],
+      "withdrawable_balance": "98.10",
+      "total_salary": "0",
+      "status": "has_salary_detail"
+    },
+    {
+      "user_no": "8642188",
+      "role": "主播",
+      "policy_type": 3,
+      "monthly_salary": "0",
+      "weekly_salary": "0",
+      "weekly_settled_salary": "22.45",
+      "sources": [
+        "weekly:2026-09-21:settled_snapshot"
+      ],
+      "withdrawable_balance": "67.35",
+      "total_salary": "0",
+      "status": "has_salary_detail"
+    }
+  ],
+  "salary_details": {
+    "monthly": [
+      {
+        "user_no": "8808791",
+        "role": "公会长",
+        "policy_type": 1,
+        "period_type": "monthly",
+        "period": "2026-09",
+        "valid_diamond_amount_total": 5000000,
+        "valid_diamond_balance_amount": 5000000,
+        "non_coin_reward_amount": "30.65",
+        "coin_reward_amount": "0.00",
+        "anchor_base_salary_amount": "19.16",
+        "anchor_tc_reward_amount": "11.49",
+        "owner_management_salary": "7.66",
+        "total_salary": "30.65",
+        "advance_deduction_amount": "0.00",
+        "salary_balance": "30.65",
+        "source": "realtime",
+        "settle_status": null
+      },
+      {
+        "user_no": "2608302",
+        "role": "主播",
+        "policy_type": 1,
+        "period_type": "monthly",
+        "period": "2026-09",
+        "valid_diamond_amount_total": 5000000,
+        "valid_diamond_balance_amount": 5000000,
+        "non_coin_reward_amount": "28.74",
+        "coin_reward_amount": "0.00",
+        "anchor_base_salary_amount": "28.74",
+        "anchor_tc_reward_amount": "0.00",
+        "owner_management_salary": "9.58",
+        "total_salary": "28.74",
+        "advance_deduction_amount": "0.00",
+        "salary_balance": "28.74",
+        "source": "realtime",
+        "settle_status": null
+      },
+      {
+        "user_no": "5485290",
+        "role": "主播",
+        "policy_type": 2,
+        "period_type": "monthly",
+        "period": "2026-09",
+        "valid_diamond_amount_total": 5000000,
+        "valid_diamond_balance_amount": 5000000,
+        "non_coin_reward_amount": "23.46",
+        "coin_reward_amount": "5.86",
+        "anchor_base_salary_amount": "--",
+        "anchor_tc_reward_amount": "--",
+        "owner_management_salary": "7.33",
+        "total_salary": "29.32",
+        "advance_deduction_amount": "0.00",
+        "salary_balance": "29.32",
+        "source": "realtime",
+        "settle_status": null
+      }
+    ],
+    "weekly": [
+      {
+        "user_no": "5586174",
+        "role": "主播",
+        "policy_type": 3,
+        "period_type": "weekly",
+        "period": "2026-09-21",
+        "valid_diamond_amount_total": 5000000,
+        "valid_diamond_balance_amount": 5000000,
+        "non_coin_reward_amount": "22.45",
+        "coin_reward_amount": "0.00",
+        "anchor_base_salary_amount": "--",
+        "anchor_tc_reward_amount": "--",
+        "owner_management_salary": "8.30",
+        "total_salary": "22.45",
+        "advance_deduction_amount": "0.00",
+        "salary_balance": "22.45",
+        "source": "settled_snapshot",
+        "settle_status": 2
+      },
+      {
+        "user_no": "3248992",
+        "role": "主播",
+        "policy_type": 3,
+        "period_type": "weekly",
+        "period": "2026-09-21",
+        "valid_diamond_amount_total": 5000000,
+        "valid_diamond_balance_amount": 5000000,
+        "non_coin_reward_amount": "22.45",
+        "coin_reward_amount": "0.00",
+        "anchor_base_salary_amount": "--",
+        "anchor_tc_reward_amount": "--",
+        "owner_management_salary": "8.30",
+        "total_salary": "22.45",
+        "advance_deduction_amount": "0.00",
+        "salary_balance": "22.45",
+        "source": "settled_snapshot",
+        "settle_status": 2
+      },
+      {
+        "user_no": "8642188",
+        "role": "主播",
+        "policy_type": 3,
+        "period_type": "weekly",
+        "period": "2026-09-21",
+        "valid_diamond_amount_total": 5000000,
+        "valid_diamond_balance_amount": 5000000,
+        "non_coin_reward_amount": "22.45",
+        "coin_reward_amount": "0.00",
+        "anchor_base_salary_amount": "--",
+        "anchor_tc_reward_amount": "--",
+        "owner_management_salary": "8.30",
+        "total_salary": "22.45",
+        "advance_deduction_amount": "0.00",
+        "salary_balance": "22.45",
+        "source": "settled_snapshot",
+        "settle_status": 2
+      }
+    ]
+  },
+  "balances": [
+    {
+      "user_no": "5586174",
+      "role": "主播",
+      "pools": [
+        {
+          "pool_type": 1,
+          "pool_name": "个人薪资余额池",
+          "available_amount": "91.31",
+          "frozen_amount": "0.00"
+        }
+      ],
+      "withdrawable_balance": "91.31",
+      "balance_status": "has_balance_pool"
+    },
+    {
+      "user_no": "3248992",
+      "role": "主播",
+      "pools": [
+        {
+          "pool_type": 1,
+          "pool_name": "个人薪资余额池",
+          "available_amount": "98.10",
+          "frozen_amount": "0.00"
+        }
+      ],
+      "withdrawable_balance": "98.10",
+      "balance_status": "has_balance_pool"
+    },
+    {
+      "user_no": "2608302",
+      "role": "主播",
+      "pools": [
+        {
+          "pool_type": 1,
+          "pool_name": "个人薪资余额池",
+          "available_amount": "28.74",
+          "frozen_amount": "0.00"
+        }
+      ],
+      "withdrawable_balance": "28.74",
+      "balance_status": "has_balance_pool"
+    },
+    {
+      "user_no": "5485290",
+      "role": "主播",
+      "pools": [
+        {
+          "pool_type": 1,
+          "pool_name": "个人薪资余额池",
+          "available_amount": "23.46",
+          "frozen_amount": "0.00"
+        },
+        {
+          "pool_type": 2,
+          "pool_name": "金币工资余额池",
+          "available_amount": "5.86",
+          "frozen_amount": "0.00"
+        }
+      ],
+      "withdrawable_balance": "29.32",
+      "balance_status": "has_balance_pool"
+    },
+    {
+      "user_no": "8642188",
+      "role": "主播",
+      "pools": [
+        {
+          "pool_type": 1,
+          "pool_name": "个人薪资余额池",
+          "available_amount": "67.35",
+          "frozen_amount": "0.00"
+        }
+      ],
+      "withdrawable_balance": "67.35",
+      "balance_status": "has_balance_pool"
+    },
+    {
+      "user_no": "8808791",
+      "role": "公会长",
+      "pools": [
+        {
+          "pool_type": 1,
+          "pool_name": "个人薪资余额池",
+          "available_amount": "159.90",
+          "frozen_amount": "0.00"
+        },
+        {
+          "pool_type": 2,
+          "pool_name": "金币工资余额池",
+          "available_amount": "0.34",
+          "frozen_amount": "0.00"
+        }
+      ],
+      "withdrawable_balance": "160.24",
+      "balance_status": "has_balance_pool"
+    }
+  ],
+  "anchors": [
+    {
+      "user_no": "5586174",
+      "role": "主播",
+      "policy_type": 3,
+      "monthly_salary": "0",
+      "weekly_salary": "0",
+      "weekly_settled_salary": "22.45",
+      "sources": [
+        "weekly:2026-09-21:settled_snapshot"
+      ],
+      "withdrawable_balance": "91.31",
+      "total_salary": "0",
+      "status": "has_salary_detail"
+    },
+    {
+      "user_no": "3248992",
+      "role": "主播",
+      "policy_type": 3,
+      "monthly_salary": "0",
+      "weekly_salary": "0",
+      "weekly_settled_salary": "22.45",
+      "sources": [
+        "weekly:2026-09-21:settled_snapshot"
+      ],
+      "withdrawable_balance": "98.10",
+      "total_salary": "0",
+      "status": "has_salary_detail"
+    },
+    {
+      "user_no": "2608302",
+      "role": "主播",
+      "policy_type": 1,
+      "monthly_salary": "28.74",
+      "weekly_salary": "0",
+      "weekly_settled_salary": "0",
+      "sources": [
+        "monthly:realtime"
+      ],
+      "withdrawable_balance": "28.74",
+      "total_salary": "28.74",
+      "status": "has_salary_detail"
+    },
+    {
+      "user_no": "5485290",
+      "role": "主播",
+      "policy_type": 2,
+      "monthly_salary": "29.32",
+      "weekly_salary": "0",
+      "weekly_settled_salary": "0",
+      "sources": [
+        "monthly:realtime"
+      ],
+      "withdrawable_balance": "29.32",
+      "total_salary": "29.32",
+      "status": "has_salary_detail"
+    },
+    {
+      "user_no": "8642188",
+      "role": "主播",
+      "policy_type": 3,
+      "monthly_salary": "0",
+      "weekly_salary": "0",
+      "weekly_settled_salary": "22.45",
+      "sources": [
+        "weekly:2026-09-21:settled_snapshot"
+      ],
+      "withdrawable_balance": "67.35",
+      "total_salary": "0",
+      "status": "has_salary_detail"
+    },
+    {
+      "user_no": "8808791",
+      "role": "公会长",
+      "policy_type": 1,
+      "monthly_salary": "30.65",
+      "weekly_salary": "0",
+      "weekly_settled_salary": "0",
+      "sources": [
+        "monthly:realtime"
+      ],
+      "withdrawable_balance": "160.24",
+      "total_salary": "30.65",
+      "status": "has_salary_detail"
+    }
+  ],
+  "period_totals": {
+    "monthly": {
+      "anchor_salary": "88.71",
+      "owner_management_salary": "24.57",
+      "guild_salary": "113.28"
+    },
+    "weekly": {
+      "anchor_salary": "0",
+      "owner_management_salary": "0",
+      "guild_salary": "0"
+    }
+  },
+  "totals": {
+    "anchor_salary": "88.71",
+    "owner_management_salary": "24.57",
+    "guild_salary": "113.28"
+  },
+  "abnormal": []
+}

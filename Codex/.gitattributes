@@ -1,0 +1,18 @@
+* text=auto
+
+# Markdown, scripts, SQL, and config should stay text-diffable.
+*.md text eol=lf
+*.py text eol=lf
+*.sql text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+
+# Office and generated report files are binary.
+*.doc binary
+*.docx binary
+*.xls binary
+*.xlsx binary
+*.ppt binary
+*.pptx binary
+*.pdf binary
+*.xmind binary

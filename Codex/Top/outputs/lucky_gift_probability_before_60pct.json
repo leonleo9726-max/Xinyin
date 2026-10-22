@@ -1,0 +1,35 @@
+{
+  "changed_at": "2026-08-24T15:27:25.252853+08:00",
+  "environment": "test",
+  "target_win_rate": "3/5",
+  "summary": [
+    {
+      "play_type": "NON_BILATERAL",
+      "reward_pool": "SINGLE_SENDER_COIN",
+      "winning_weight": 240,
+      "miss_weight": 560,
+      "total_weight": 800
+    },
+    {
+      "play_type": "BILATERAL",
+      "reward_pool": "BILATERAL_SENDER_COIN",
+      "winning_weight": 180,
+      "miss_weight": 420,
+      "total_weight": 600
+    },
+    {
+      "play_type": "BILATERAL",
+      "reward_pool": "BILATERAL_RECIPIENT_A",
+      "winning_weight": 120,
+      "miss_weight": 280,
+      "total_weight": 400
+    },
+    {
+      "play_type": "BILATERAL",
+      "reward_pool": "BILATERAL_RECIPIENT_B",
+      "winning_weight": 120,
+      "miss_weight": 280,
+      "total_weight": 400
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "To PRD"
+  short_description: "Turn conversation context into a PRD draft"
+  default_prompt: "Use $to-prd to synthesize this conversation into a PRD draft."

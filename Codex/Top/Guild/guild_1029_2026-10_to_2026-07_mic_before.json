@@ -1,0 +1,26 @@
+[
+  {
+    "id": 995,
+    "stat_date": "2026-10-20",
+    "settlement_month": "2026-10",
+    "user_id": 900126,
+    "total_mic_seconds": 4760,
+    "effective_day": 0,
+    "last_on_time": 1792476911,
+    "last_down_time": 1792481671,
+    "created_at": "2026-10-20 15:34:31",
+    "updated_at": "2026-10-20 15:34:31"
+  },
+  {
+    "id": 996,
+    "stat_date": "2026-10-20",
+    "settlement_month": "2026-10",
+    "user_id": 900129,
+    "total_mic_seconds": 74,
+    "effective_day": 0,
+    "last_on_time": 1792483035,
+    "last_down_time": 1792483109,
+    "created_at": "2026-10-20 15:58:29",
+    "updated_at": "2026-10-20 15:58:29"
+  }
+]

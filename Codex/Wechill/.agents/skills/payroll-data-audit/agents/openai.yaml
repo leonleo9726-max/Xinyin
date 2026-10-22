@@ -1,0 +1,4 @@
+interface:
+  display_name: "Payroll Data Audit"
+  short_description: "Audit Payroll data before payout calculation"
+  default_prompt: "Use $payroll-data-audit to audit Payroll source data before calculating payouts."
