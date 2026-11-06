@@ -1,7 +1,0 @@
-interface:
-  display_name: "服务器日志查询"
-  short_description: "通过 SSH 按服务、用户和时间检索并汇总服务器请求日志"
-  default_prompt: "使用 $query-server-logs 查询 room-api 指定用户最近 10 条请求。"
-
-policy:
-  allow_implicit_invocation: true

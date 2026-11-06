@@ -1,6 +1,0 @@
-interface:
-  display_name: "Setup Agent Skills"
-  short_description: "Configure issue tracker, labels, and domain docs"
-  default_prompt: "Use $setup-matt-pocock-skills to configure this repo for the engineering skills."
-policy:
-  allow_implicit_invocation: false

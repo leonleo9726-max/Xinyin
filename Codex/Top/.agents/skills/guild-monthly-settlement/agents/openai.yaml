@@ -1,7 +1,0 @@
-interface:
-  display_name: "公会月结触发"
-  short_description: "按指定公会编号和月份触发测试环境月结并核验结算结果"
-  default_prompt: "使用 $guild-monthly-settlement 按公会编号和月份执行测试环境月结，并核验执行结果。"
-
-policy:
-  allow_implicit_invocation: true

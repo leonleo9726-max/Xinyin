@@ -1,4 +1,0 @@
-interface:
-  display_name: "Diagnose"
-  short_description: "Debug bugs with a disciplined repro loop"
-  default_prompt: "Use $diagnose to reproduce, isolate, instrument, fix, and regression-test a bug."

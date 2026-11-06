@@ -1,0 +1,51 @@
+"""
+统一 API 路径定义模块。
+
+集中管理所有 API 接口路径，消除各测试文件和批量脚本中的重复定义。
+"""
+
+# ============================================================
+# 用户认证
+# ============================================================
+
+SEND_CODE_PATH = "/user/stay/send-code"
+"""发送验证码"""
+
+REGISTER_PATH = "/user/stay/login/phone"
+"""手机号注册/登录"""
+
+LOGIN_PHONE_PATH = "/user/stay/login/password"
+"""手机号密码登录"""
+
+# ============================================================
+# 红包相关
+# ============================================================
+
+SEND_COIN_RED_PACKET_PATH = "/payer/redPacket/send/coin"
+"""发送金币红包"""
+
+SEND_GIFT_RED_PACKET_PATH = "/payer/redPacket/send/gift"
+"""发送礼物红包"""
+
+RECEIVE_RED_PACKET_PATH = "/payer/redPacket/receive"
+"""抢红包"""
+
+# ============================================================
+# 礼物相关
+# ============================================================
+
+LIVE_HEARTBEAT_PATH = "/live/heartbeat"
+"""直播间心跳"""
+
+JOIN_PARTY_MEMBER_PATH = "/live/stay/party/members/join"
+"""加入派对房间成员"""
+
+BATCH_SEND_GIFT_PATH = "/gift/batch-send"
+"""批量发送礼物"""
+
+# ============================================================
+# 业务接口（示例）
+# ============================================================
+
+BUSINESS_SAMPLE_PATH = "/user/stay/business/operation"
+"""业务操作示例接口"""

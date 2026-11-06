@@ -1,7 +1,0 @@
-interface:
-  display_name: "公会薪资查询"
-  short_description: "按月结/周结查询公会或用户薪资明细"
-  default_prompt: "使用 $guild-salary-query 查询指定公会或用户本月薪资，并按月结、周结展示明细。"
-
-policy:
-  allow_implicit_invocation: true

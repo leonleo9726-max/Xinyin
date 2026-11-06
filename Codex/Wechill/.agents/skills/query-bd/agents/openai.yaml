@@ -1,4 +1,0 @@
-interface:
-  display_name: "Query BD"
-  short_description: "Query BD and BDM staff, guild, and commission data"
-  default_prompt: "Use $query-bd to query BD/BDM status, guild context, or commission records by user_number."
