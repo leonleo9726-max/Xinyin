@@ -1,117 +1,68 @@
-# API 自动化仓库指南
+# EastPoint API 自动化测试
 
-## 目标
+## 1. 范围与授权
 
-只做满足请求所需的最小正确变更，同时保持现有 API 测试架构和真实服务安全边界。
+- 以用户当前请求、已提交代码和现有测试为行为与范围依据；需求无法从这些来源确定时，先说明缺口。
+- Python 使用 `E:\python\work\.venv\Scripts\python.exe`。编写测试、安装依赖、运行本地脚本和修复本地环境可直接执行。
+- 真实 API 调用必须显式携带 `--run-api`；提交、推送、建分支、创建 PR 和其他外部写操作仅在用户明确要求后执行。
+- 回复使用简体中文，结论优先，说明已运行的验证和未运行的高风险检查。
 
-## 仓库概况
+## 2. 项目规约
 
-- 领域：EastPoint 直播/社交平台 API 自动化。
-- 运行环境：Python。
-- 主要工具：Python 3.11、Pytest、Requests、Cryptography、pytest-html 和 Ruff。
-- 依赖入口：`ApiAutomation/pyproject.toml`；兼容安装文件为 `requirements*.txt`。
-- 当前仓库使用 uv 管理锁定环境，并使用 Ruff 做静态检查；未使用 FastAPI 或 Pydantic，不要假设或引入未配置的框架。
+- 业务领域：直播/社交平台 API 自动化测试，技术栈为 Python、pytest、requests、cryptography 与 Pandas。
+- 业务请求默认使用 AES-CBC 加密与 SHA-256 签名。`config/settings.py` 从环境变量读取 `EASTPOINT_BASE_URL` 与 `EASTPOINT_TEST_ENCRYPT_KEY`；除受控明文例外外，密钥缺失时不得降级为明文请求。
+- 测试环境的 `BATCH_SEND_GIFT_PATH`（直播批量送礼）与 `LIVE_HEARTBEAT_PATH`（直播心跳）为受控明文 JSON 例外，分别通过 `common.live_gift.post_live_gift()` 和 `common.live_heartbeat.post_live_heartbeat()` 发送。该例外只适用于这两个路径；新增或修改其他业务路径时，仍必须使用加密和签名传输。
+- `common/sign_utils.py` 负责过滤空值、`stay*` 键转换、签名和加密；`common/http_utils.py` 负责传输与 `980003000` 的 0.5-1.5 秒抖动重试。
+- 业务调用优先使用 `common.api_client.EastPointClient`，测试与批量脚本只声明业务路径、载荷和凭证。
+- `data/login_credentials.json` 与 `data/batch_login_credentials.json` 只保存本地运行凭证，已被 Git 忽略；不得重新加入版本控制。
 
-## 目录结构
+## 3. 常用命令
 
-- `ApiAutomation/conftest.py`：pytest 选项和共享 fixture。
-- `ApiAutomation/pytest.ini`：测试发现规则和 HTML 报告设置。
-- `ApiAutomation/common/`：HTTP、签名、认证、响应和业务辅助模块。
-- `ApiAutomation/config/settings.py`：URL、路径、加密设置和请求头构建的集中配置。
-- `ApiAutomation/tests/`：API 测试套件。
-- `ApiAutomation/data/examples/`：可提交的脱敏模板；真实输入和凭证只放在被忽略的 `data/local/`。
-- `ApiAutomation/reports/`：生成的测试报告，不作为源文件处理。
-- `plans/` 和 `docs/`：规划、Agent 与领域文档。
+在 `ApiAutomation` 目录执行：
 
-优先扩展现有辅助模块，不创建功能重复的工具模块。已有合适的 `common/` 模块时，将可复用的请求行为保留在其中，不要散落到单个测试里。
+- 安装依赖：`${PYTHON_EXE} -m pip install -r requirements.txt`
+- 离线单元测试：`${PYTHON_EXE} -m pytest -m unit -p no:cacheprovider -o addopts=''`
+- 全部真实接口测试：`pytest -m api --run-api`
+- 单文件调试：`pytest tests/test_login_phone.py --run-api -s`
+- 批量登录：`${PYTHON_EXE} batch_login.py --workers 3 --save-credentials`
+- 批量发/领红包：`${PYTHON_EXE} batch_receive_red_packet.py --send-coin --workers 5 --run-api`
 
-## 工作方式
+## 4. 请求与断言
 
-编辑前：
+```python
+from common.api_client import EastPointClient
+from config import settings
 
-- 阅读受影响的实现、测试、fixture 和配置。
-- 遵循现有导入与执行约定。
-- 在已有支持范围内，同时保持从仓库根目录和 `ApiAutomation` 目录运行的兼容性。
+client = EastPointClient(settings.TEST_ENCRYPT_KEY)
+response = client.post("/api_path", {"payload": "data"}, token="credential_token")
+```
 
-保持变更集中。处理局部任务时，不重组包结构、不统一全部导入，也不顺带现代化无关代码。
+- 业务载荷不应包含 `None`；传输层会再次过滤空值。
+- 使用 `common.response_utils.is_api_success()` 判定成功。响应中出现的 `code/stayCode`、`success/stayIsSuccess` 和 `status` 指标必须全部一致为成功；不同接口可以只返回其中一类指标。
+- 新的独立脚本开头包含 `sys.path.insert(0, os.path.dirname(__file__))`。
+- 不使用 `common/excel_utils.py`。
 
-## 加密与签名约束
+## 5. 工程工作流
 
-- 加密请求尽量通过 `common/http_utils.py` 发送。
-- `common/sign_utils.py` 包含安全敏感的签名和 AES-CBC 行为。
-- 生成签名前，按现有签名流程要求移除 null/空值。
-- 保持以 `stay` 开头字段的现有转换规则：移除前缀，并将余下名称的首字母转为小写。
-- 保持必需的 `locale`、`timestamp` 和 `sign` 请求头。
-- 修改加密密钥、签名规则、请求路径或成功判定逻辑前，必须有针对性测试并明确说明原因。
+### 路由
 
-## 测试与真实 API 安全
+- **评审**：有提交、分支、PR 或比较点时使用 `code-review`。
+- **诊断**：报错、失败、异常行为或性能回退时，先使用 `diagnosing-bugs`；仅要求诊断时不改代码。
+- **设计**：新增功能、模块边界、公共接口或可测试性调整时使用 `codebase-design`；术语不清时使用 `domain-modeling`。
+- **测试**：用户要求测试先行、红绿重构或集成测试时使用 `tdd`；其他修改按风险补充测试。
+- **调研**：需要外部技术事实、官方文档或方案比较时使用 `research`。
+- **冲突**：进行中的 merge 或 rebase 冲突使用 `resolving-merge-conflicts`。
+- **GitHub**：仓库、PR、Issue 使用 `github:github`；审查意见使用 `github:gh-address-comments`；Actions 失败使用 `github:gh-fix-ci`；发布使用 `github:yeet`。
 
-除非命令另有说明，从 `Python/work` 目录运行：
+### 变更闭环
 
-- 锁定安装：在 `ApiAutomation` 目录运行 `uv sync --locked --group dev`
-- 兼容安装：`python3 -m pip install -r ApiAutomation/requirements-dev.txt`
-- 安全的本地收集/默认运行：`pytest ApiAutomation`
-- 真实 API 测试：`pytest ApiAutomation -m api --run-api`
-- 静态检查：在 `ApiAutomation` 目录运行 `uv run --locked ruff check .`
+1. 检查受影响代码、工作区状态和现有测试。
+2. 以最小范围实现用户明确要求的行为。
+3. 运行聚焦且无破坏性的验证；共享行为变更时运行完整相关测试集。
+4. 报告改动、验证结果和仍需用户完成的外部操作。
 
-规则：
+### Git 边界
 
-- 只有用户明确要求或授权真实外部调用后，才能使用 `--run-api` 运行测试。
-- `api` marker 与 `--run-api` collection 门禁是唯一真实请求 seam；新增真实测试必须标记 `api`。
-- 先运行范围最小的相关测试。
-- 只有测试实际成功完成后才能声称通过。
-- 未运行真实 API 测试时必须明确说明；不能把仅完成收集或全部跳过描述为端到端验证。
-- 保持现有测试使用的确定性种子和 CSV 列契约。
-
-## 数据与密钥
-
-- 手机号、用户 ID、令牌、设备 ID、加密密钥和生成的凭证 JSON 均按敏感数据处理。
-- 不打印、不写入报告、不提交，也不在回复中暴露敏感值。
-- 未经明确要求，不替换类生产数据文件，也不修改账户余额、Redis 数据或其他外部状态。
-- 使用 fixture 和集中配置，避免在测试中硬编码 URL、凭证、请求头或密钥。
-- 不静默关闭 TLS 校验、身份认证、权限控制或响应校验。
-
-## Python 风格
-
-- 遵循所在模块的现有风格。
-- 优先使用显式、可读的函数、描述性命名、提前返回、上下文管理器和 f-string。
-- 避免全局可变状态、通配符导入、吞掉宽泛异常、重复请求逻辑和不必要的抽象。
-- 类型标注有助于理解变更时可以添加，但不要为无关任务进行全仓库类型清理。
-- 默认不新增 `sys.path` 操作；除非任务就是重构导入，否则保持现有兼容性。
-- 不在未说明原因的情况下抑制警告或异常。
-
-## 依赖与工具链
-
-- 除非任务确有需要，不安装或修改依赖。
-- 只有依赖行为变化时才更新 `requirements.txt`。
-- 不为仓库尚未配置的工具虚构验证命令。
-- 修改依赖后同步更新 `pyproject.toml` 与兼容的 `requirements*.txt`。
-
-## Git 与生成文件
-
-- 未经明确要求，不提交、推送、创建分支/worktree 或改写历史。
-- 不把生成的报告、缓存、字节码或本地凭证产物当作源文件编辑。
-- 保留工作区中与当前任务无关的用户变更。
-
-## Agent skills
-
-### Issue tracker
-
-发布或管理 issue、spec 和 ticket 前，先阅读 `docs/agents/issue-tracker.md`，并使用其中约定的 GitHub Issues 工作流。
-
-### Triage labels
-
-分类或改变 issue 状态前，先阅读 `docs/agents/triage-labels.md`，并使用其中五个 Matt Pocock 标准标签。
-
-### Domain docs
-
-进行领域建模、架构工作或依赖历史设计决策的变更前，先阅读 `docs/agents/domain.md`。本仓库采用单一上下文领域文档布局。
-
-## 完成标准
-
-回复完成前：
-
-- 检查差异中不存在意外变更或敏感信息。
-- 运行相关的安全测试，或说明未运行的原因。
-- 移除临时诊断和调试代码。
-- 汇总改动内容、变更文件、验证结果及仍然存在的真实环境风险。
+- 保留已有用户改动，不还原或覆盖无关文件。
+- 删除前确认准确目标；完成后说明删除内容和可恢复性。
+- 只在用户明确要求时提交、推送、创建分支或 PR。

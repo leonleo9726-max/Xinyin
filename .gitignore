@@ -1,5 +1,5 @@
-### Git Worktree ###
-.worktrees/
+# Local agent context
+CONTEXT.md
 
-### macOS ###
-.DS_Store
+# Generated test reports
+reports/

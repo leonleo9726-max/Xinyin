@@ -1,7 +1,7 @@
 """
 批量登录脚本（多线程 + 连接池）。
 
-使用 BatchRunner 执行并发与重试，通过 HttpUtils 复用 HTTP 连接。
+使用 ThreadPoolExecutor 并发执行登录，通过 HttpUtils 连接池复用 HTTP 连接。
 """
 
 import argparse
@@ -10,17 +10,23 @@ import logging
 import random
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-from common.api_paths import LOGIN_PHONE_PATH
-from common.batch_runner import BatchPolicy, BatchRunner
+PROJECT_ROOT = Path(__file__).resolve().parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except (AttributeError, OSError):
+    pass
+
 from common.http_utils import HttpUtils
-from common.logging_utils import install_sensitive_data_filter
-from common.login_operations import create_login_phone_params
-from common.response_utils import extract_login_info, get_error_details, is_success
+from common.auth_utils import create_login_phone_params, login_with_phone
+from common.response_utils import extract_error_details, extract_login_info, is_api_success
 from config import settings
 
-PROJECT_ROOT = Path(__file__).resolve().parent
 logger = logging.getLogger(__name__)
 
 
@@ -33,7 +39,6 @@ def configure_logging(verbose: bool = False):
         datefmt="%H:%M:%S",
         stream=sys.stdout,
     )
-    install_sensitive_data_filter()
 
 
 def load_csv_values(data_file: Path, field_name: str):
@@ -43,7 +48,7 @@ def load_csv_values(data_file: Path, field_name: str):
         reader = csv.DictReader(file)
         for row in reader:
             value = (row.get(field_name) or "").strip()
-            if value:
+            if value and not value.startswith("#"):
                 values.append(value)
     return values
 
@@ -51,7 +56,7 @@ def load_csv_values(data_file: Path, field_name: str):
 def allocate_unique_ids(phones, unique_ids):
     """为每个手机号分配设备ID，当手机号比设备ID多时循环使用设备ID"""
     if not unique_ids:
-        unique_ids = ["example-device-id"]
+        unique_ids = ["bac1131e82cd4c738e3199375ffe77b4"]
 
     test_cases = []
     # 使用循环分配策略，确保每个设备ID被均匀使用
@@ -75,9 +80,6 @@ def execute_login(test_case, encrypt_key, delay, verbose=False, retry=1, retry_d
     """执行单个登录任务"""
     phone_number = test_case["phone_number"]
     unique_id = test_case["uniqueId"]
-    headers = settings.build_common_encrypted_headers()
-    login_url = f"{settings.BASE_URL}{LOGIN_PHONE_PATH}"
-
     last_failure = None
     for attempt in range(1, retry + 1):
         if delay and delay > 0:
@@ -88,15 +90,13 @@ def execute_login(test_case, encrypt_key, delay, verbose=False, retry=1, retry_d
         if verbose and attempt > 1:
             logger.info("[RETRY %s/%s] %s", attempt, retry, phone_number)
 
-        login_payload = create_login_phone_params(phone_number, uniqueId=unique_id)
-        login_response = HttpUtils.post(
-            url=login_url,
-            data=login_payload,
-            headers=headers,
-            encrypt_key=encrypt_key,
+        login_payload = create_login_phone_params(
+            phone_number=phone_number,
+            uniqueId=unique_id,
         )
+        login_response = login_with_phone(login_payload, encrypt_key)
 
-        if not is_network_error(login_response) and is_success(login_response):
+        if not is_network_error(login_response) and is_api_success(login_response):
             login_info = extract_login_info(login_response)
             if verbose:
                 if login_info:
@@ -111,7 +111,7 @@ def execute_login(test_case, encrypt_key, delay, verbose=False, retry=1, retry_d
             }
 
         # 提取错误详情
-        error_details = get_error_details(login_response)
+        error_details = extract_error_details(login_response)
         
         last_failure = {
             "phone": phone_number,
@@ -148,14 +148,22 @@ def main():
     parser.add_argument("--start-index", type=int, default=0, help="从第几个手机号开始登录，默认0")
     parser.add_argument("--max-count", type=int, default=0, help="最多登录多少个手机号，默认0表示全部")
     parser.add_argument("--save-credentials", action="store_true", help="是否保存登录凭证到JSON文件")
+    parser.add_argument("--run-api", action="store_true", help="确认执行真实登录请求")
     args = parser.parse_args()
 
     # 配置日志
     configure_logging(args.verbose)
 
+    if not args.run_api:
+        logger.error("拒绝执行真实登录；请明确添加 --run-api")
+        return 2
+    if not settings.TEST_ENCRYPT_KEY:
+        logger.error("缺少 EASTPOINT_TEST_ENCRYPT_KEY，无法发送加密登录请求")
+        return 2
+
     # 加载手机号和设备ID
-    phones = load_csv_values(PROJECT_ROOT / "data" / "local" / "login_phone.csv", "phone_number")
-    unique_ids = load_csv_values(PROJECT_ROOT / "data" / "local" / "device_ids.csv", "uniqueId")
+    phones = load_csv_values(PROJECT_ROOT / "data" / "login_phone.csv", "phone_number")
+    unique_ids = load_csv_values(PROJECT_ROOT / "data" / "device_ids.csv", "uniqueId")
 
     if args.max_count > 0:
         phones = phones[args.start_index : args.start_index + args.max_count]
@@ -165,7 +173,7 @@ def main():
     test_cases = allocate_unique_ids(phones, unique_ids)
     total = len(test_cases)
     if total == 0:
-        logger.error("没有找到可登录的手机号，请检查 data/local/login_phone.csv")
+        logger.error("没有找到可登录的手机号，请检查 data/login_phone.csv")
         return
 
     logger.info("开始批量登录: total=%s, workers=%s, delay=%s", total, args.workers, args.delay)
@@ -175,29 +183,23 @@ def main():
     login_credentials = {}
     start_time = time.time()
     
-    encrypt_key = settings.require_encrypt_key()
-    summary = BatchRunner(finalizer=HttpUtils.close_session).run(
-        test_cases,
-        lambda case: execute_login(
-            case, encrypt_key, 0, args.verbose, 1, 0, 0
-        ),
-        BatchPolicy(
-            workers=args.workers,
-            attempts=args.retry,
-            delay=args.delay,
-            retry_delay=args.retry_delay,
-            jitter=args.jitter,
-        ),
-        succeeded=lambda result: result["ok"],
-    )
-    for item_result in summary.results:
-        result = item_result.result or {
-            "ok": False,
-            "phone": item_result.item["phone_number"],
-            "stage": "exception",
-            "error_details": item_result.error,
+    with ThreadPoolExecutor(max_workers=args.workers) as executor:
+        future_to_case = {
+            executor.submit(
+                execute_login,
+                case,
+                settings.TEST_ENCRYPT_KEY,
+                args.delay,
+                args.verbose,
+                args.retry,
+                args.retry_delay,
+                args.jitter,
+            ): case
+            for case in test_cases
         }
-        if result["ok"]:
+        for future in as_completed(future_to_case):
+            result = future.result()
+            if result["ok"]:
                 success_count += 1
                 # 保存登录凭证
                 if args.save_credentials and result.get("login_info"):
@@ -207,22 +209,24 @@ def main():
                         "phone_number": phone,
                         "stayUserId": login_info["stayUserId"],
                         "stayToken": login_info["stayToken"],
-                        "uniqueId": item_result.item["uniqueId"]
+                        "uniqueId": future_to_case[future]["uniqueId"]
                     }
-        else:
-            failures.append(result)
-            error_msg = result.get('error_details', '未知错误')
-            logger.warning("[FAILED] %s stage=%s attempt=%s", result['phone'], result['stage'], item_result.attempts)
-            logger.debug("        错误: %s", error_msg[:100])
+            else:
+                failures.append(result)
+                error_msg = result.get('error_details', str(result.get('response', '未知错误')))
+                logger.warning("[FAILED] %s stage=%s attempt=%s", result['phone'], result['stage'], result.get('attempt', 1))
+                logger.debug("        错误: %s", error_msg[:100])
 
     elapsed = time.time() - start_time
     logger.info("批量登录完成: 成功=%s/%s, 失败=%s, 耗时=%.1fs", success_count, total, len(failures), elapsed)
     
+    # 清理当前线程的 Session 连接
+    HttpUtils.close_session()
+    
     # 保存登录凭证
     if args.save_credentials and login_credentials:
         import json
-        credentials_file = PROJECT_ROOT / "data" / "local" / "batch_login_credentials.json"
-        credentials_file.parent.mkdir(parents=True, exist_ok=True)
+        credentials_file = PROJECT_ROOT / "data" / "batch_login_credentials.json"
         with credentials_file.open("w", encoding="utf-8") as f:
             json.dump(login_credentials, f, ensure_ascii=False, indent=2)
         logger.info("登录凭证已保存到: %s", credentials_file)
@@ -239,4 +243,4 @@ def main():
 # --save-credentials：保存登录凭证到JSON文件
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main() or 0)
